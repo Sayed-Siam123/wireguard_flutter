@@ -1,9 +1,27 @@
 import 'dart:async';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:form_builder_validators/localization/l10n.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:loggy/loggy.dart';
+import 'package:wireguard_flutter/routes/app_pages.dart';
+import 'package:wireguard_flutter/theme/theme_data.dart';
 import 'package:wireguard_vpn/wireguard_vpn.dart';
 
-void main() {
+void main() async{
+
+  configLoading();
+  WidgetsFlutterBinding.ensureInitialized();
+  Loggy.initLoggy(
+    logPrinter: (kReleaseMode) ? const PrettyPrinter() : const PrettyPrinter(), //CrashlyticsPrinter()
+  );
+  await GetStorage.init();
+
   runApp(const MyApp());
 }
 
@@ -13,36 +31,58 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return AdaptiveTheme(
+      initial: AdaptiveThemeMode.light,
+      light: ThemeConfig.lightTheme,
+      dark: ThemeConfig.darkTheme,
+      builder:(light, dark) => ScreenUtilInit(
+          minTextAdapt: true,
+          splitScreenMode: true,
+          designSize: const Size(360, 690),
+          builder: (context , child) {
+            return GetMaterialApp(
+              /* useInheritedMediaQuery: true,
+            locale: DevicePreview.locale(context),*/
+              builder: EasyLoading.init(),
+              debugShowCheckedModeBanner: false,
+              theme: light,
+              darkTheme: dark,
+              enableLog: true,
+              initialRoute: AppPages.INITIAL,
+              defaultTransition: Transition.fade,
+              getPages: AppPages.routes,
+              smartManagement: SmartManagement.keepFactory,
+              title: 'Echo',
+              localizationsDelegates: const [
+                FormBuilderLocalizations.delegate,
+              ],
+            );
+          }
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
+
   }
 }
 
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..loadingStyle = EasyLoadingStyle.light
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
+}
+
+/*
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -125,3 +165,4 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 }
+*/
