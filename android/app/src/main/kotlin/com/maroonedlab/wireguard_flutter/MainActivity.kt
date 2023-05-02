@@ -20,6 +20,7 @@ import kotlinx.coroutines.*
 import java.util.*
 
 class MainActivity: FlutterActivity() {
+
     private val permissionRequestCode = 10014
     //private val channel = "tark.pro/wireguard-flutter"
     private val channel = "com.maroonedlab/wireguard-flutter"
