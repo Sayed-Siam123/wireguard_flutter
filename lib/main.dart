@@ -14,7 +14,6 @@ import 'package:wireguard_flutter/theme/theme_data.dart';
 import 'package:wireguard_vpn/wireguard_vpn.dart';
 
 void main() async{
-
   configLoading();
   WidgetsFlutterBinding.ensureInitialized();
   Loggy.initLoggy(

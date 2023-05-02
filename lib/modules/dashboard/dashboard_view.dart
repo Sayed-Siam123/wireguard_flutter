@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard/mobile/DashboardPageMobileLandscape.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard/mobile/DashboardPageMobilePortrait.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard/tablet/DashboardPageTabletPortrait.dart';
-
-import 'dashboard_logic.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);

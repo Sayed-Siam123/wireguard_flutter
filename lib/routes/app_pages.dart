@@ -18,7 +18,7 @@ class AppPages {
     ]),
     GetPage(name: Routes.DASHBOARD, page: () => const DashboardPage(), bindings: [
       DashboardBinding(),
-      InternetCheckerHelperBinding(),
+      //InternetCheckerHelperBinding(),
     ]),
   ];
 }
