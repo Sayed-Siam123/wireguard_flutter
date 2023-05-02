@@ -13,7 +13,6 @@ import 'package:wireguard_flutter/routes/app_pages.dart';
 import 'package:wireguard_flutter/theme/theme_data.dart';
 
 void main() async{
-
   configLoading();
   WidgetsFlutterBinding.ensureInitialized();
   Loggy.initLoggy(

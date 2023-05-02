@@ -72,4 +72,15 @@ abstract class ShimmerConstant{
       baseColor: Colors.white,
     );
   }
+
+  static shimmerAdd(){
+    return FadeShimmer(
+      height: 60,
+      width: widthPx(width: Get.width,value: 100)!,
+      radius: 0,
+      highlightColor: Colors.grey,
+      baseColor: Colors.white,
+    );
+  }
+
 }

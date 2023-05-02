@@ -1,6 +1,7 @@
 abstract class ConstantData{
   static const String weatherUrl = "https://api.openweathermap.org/data/2.5";
-  static const String apiURL = "http://103.145.133.71/api";
+  static const String apiURL = "https://ad.sabbir.dev/api/v1";
+  ///ad/test-ad-89
   static const String localApiURL = "http://192.168.0.248/api";
   static const String airportInfoLink = "https://pilotnav.com/airports/";
   static const String pdfFileDownloadLink = "http://www.africau.edu";
