@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
+import 'package:wireguard_flutter/model/tunnel.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard_logic.dart';
 import 'package:wireguard_flutter/widgets/shimmer.dart';
-import 'package:wireguard_vpn/wireguard_vpn.dart';
 
 import '../../../../helper/internet_checker_helper/internet_checker_helper_logic.dart';
 
@@ -13,10 +13,7 @@ import '../../../../helper/internet_checker_helper/internet_checker_helper_logic
 class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
   final SizingInformation? sizingInformation;
 
-  final wireGuardFlutterPlugin = WireguardVpn();
-
   bool vpnActivate = false;
-  Stats stats = Stats(totalDownload: 0, totalUpload: 0);
   final String initName = 'MyWireguardVPN';
   final String initAddress = "10.6.0.3";
   final String initPort = "51820";
@@ -55,7 +52,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    controller.networkConfig.value.isNotEmpty ? Expanded(
+                    /*controller.networkConfig.value.isNotEmpty ? Expanded(
                       child: ListView.builder(
                         itemCount: controller.networkConfig.value.length,
                         itemBuilder: (context, index) {
@@ -69,7 +66,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                                       value: vpnActivate,
                                       onChanged: (value) {
                                        setState((){
-                                         _activateVpn(value, index);
+                                         //_activateVpn(value, index);
                                        });
                                       },
                                       title: Text(controller.networkConfig
@@ -85,9 +82,10 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                           );
                         },
                       ),
-                    ) : const Text("Press + button to add vpn configaration"),
-                    controller.isLoading.value ? ShimmerConstant.shimmerAdd()
-                        : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
+                    ) : */
+                    const Text("Press + button to add vpn configaration"),
+                    // controller.isLoading.value ? ShimmerConstant.shimmerAdd()
+                    //     : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
                   ],
                 );
               },
@@ -96,9 +94,19 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
-            WireguardPlugin.getTunnelNames().then((value) {
-              print(value.toString());
-            });
+            final result = WireguardPlugin.setState(isConnected: !vpnActivate, tunnel: Tunnel(
+                name: initName,
+                address: initAddress,
+                listenPort: initPort,
+                dnsServer: initDnsServer,
+                privateKey: initPrivateKey,
+                peerAllowedIp: initAllowedIp,
+                peerPublicKey: initPublicKey,
+                peerEndpoint: initEndpoint,preSharedKey: presharedKey)
+            );
+
+            //print(result.then((value) => print(value)));
+
           },
           child: Icon(Icons.add, color: Colors.black, size: 28),
         ),
@@ -106,13 +114,13 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
     );
   }
 
-  void _activateVpn(bool value, index) async {
+ /* void _activateVpn(bool value, index) async {
     print("Here");
     print(value);
     controller.networkConfig.value[index]["vpn_active"] = vpnActivate;
     print(controller.networkConfig.value[index]["vpn_active"]);
 
-    /* final results =
+    *//* final results =
     await controller.wireGuardFlutterPlugin.changeStateParams(SetStateParams(
       state: controller.networkConfig.value[index]["vpn_active"] as bool,
       tunnel: Tunnel(
@@ -133,7 +141,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         peerPresharedKey: controller.networkConfig
             .value[index]["pre_shared_key"].toString(),
       ),
-    ));*/
+    ));*//*
 
     final results = await wireGuardFlutterPlugin.changeStateParams(SetStateParams(
       state: !vpnActivate,
@@ -154,6 +162,6 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
     vpnActivate = results ?? false;
     controller.update();
     //controller.vpnActivate.value ? _obtainStats() : null;
-  }
+  }*/
 
 }

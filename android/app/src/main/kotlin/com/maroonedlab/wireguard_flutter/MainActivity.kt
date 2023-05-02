@@ -182,6 +182,7 @@ class MainActivity: FlutterActivity() {
                                         .parseAllowedIPs(params.tunnel.peerAllowedIp)
                                         .parsePublicKey(params.tunnel.peerPublicKey)
                                         .parseEndpoint(params.tunnel.peerEndpoint)
+                                        .parsePreSharedKey(params.tunnel.preSharedKey)
                                         .build()
                         )
                         .build()
@@ -288,6 +289,7 @@ class TunnelData(
         val peerAllowedIp: String,
         val peerPublicKey: String,
         val peerEndpoint: String,
+        val preSharedKey: String,
 )
 
 class StateChangeData(

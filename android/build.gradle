@@ -1,12 +1,12 @@
 buildscript {
     ext.wireguardVersionCode = 486
     ext.wireguardVersionName = '1.0.20210211'
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.8.0'
 
     ext {
         activityVersion = '1.2.1'
         agpVersion = '4.1.2'
-        annotationsVersion = '1.1.0'
+        annotationsVersion = '1.6.0'
         appcompatVersion = '1.2.0'
         biometricVersion = '1.1.0-rc01'
         collectionVersion = '1.1.0'
@@ -36,7 +36,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

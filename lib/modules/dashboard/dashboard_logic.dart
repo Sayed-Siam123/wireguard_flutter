@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:wireguard_flutter/helper/snackbarHelper.dart';
+import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
 import 'package:wireguard_flutter/repository/apiprovider.dart';
-import 'package:wireguard_vpn/wireguard_vpn.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../helper/loader.dart';
@@ -26,7 +26,7 @@ class DashboardLogic extends GetxController {
 
   var isLoading = false.obs;
 
-  final wireGuardFlutterPlugin = WireguardVpn();
+  //final wireGuardFlutterPlugin = WireguardVpn();
 
 
   var networkConfig = [
@@ -53,7 +53,9 @@ class DashboardLogic extends GetxController {
   void onInit() async{
     // TODO: implement onInit
     super.onInit();
-    await getResponse();
+    //await WireguardPlugin.requestPermission();
+    //await WireguardPlugin.initialize();
+    //await getResponse();
   }
 
   @override

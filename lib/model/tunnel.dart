@@ -7,6 +7,7 @@ class Tunnel {
   final String peerAllowedIp;
   final String peerPublicKey;
   final String peerEndpoint;
+  final String preSharedKey;
 
   Tunnel({
     required this.name,
@@ -17,6 +18,7 @@ class Tunnel {
     required this.peerAllowedIp,
     required this.peerPublicKey,
     required this.peerEndpoint,
+    required this.preSharedKey,
   });
 
   Map<String, dynamic> toJson() => {
@@ -28,5 +30,6 @@ class Tunnel {
         'peerAllowedIp': peerAllowedIp,
         'peerPublicKey': peerPublicKey,
         'peerEndpoint': peerEndpoint,
+        'preSharedKey': preSharedKey,
       };
 }
