@@ -15,7 +15,7 @@ class SplashPageMobilePortrait extends GetView<SplashLogic> {
   @override
   Widget build(BuildContext context) {
     Get.find<SplashLogic>();
-    Get.find<InternetCheckerHelperLogic>();
+    //Get.find<InternetCheckerHelperLogic>();
     return SafeArea(
       bottom: false,
       child: Scaffold(

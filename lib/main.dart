@@ -11,7 +11,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:loggy/loggy.dart';
 import 'package:wireguard_flutter/routes/app_pages.dart';
 import 'package:wireguard_flutter/theme/theme_data.dart';
-import 'package:wireguard_vpn/wireguard_vpn.dart';
 
 void main() async{
 

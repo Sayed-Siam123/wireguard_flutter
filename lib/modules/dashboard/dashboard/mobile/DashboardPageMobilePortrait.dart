@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard_logic.dart';
 
 import '../../../../helper/internet_checker_helper/internet_checker_helper_logic.dart';
@@ -15,7 +16,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
   @override
   Widget build(BuildContext context) {
     Get.find<DashboardLogic>();
-    Get.find<InternetCheckerHelperLogic>();
+    //Get.find<InternetCheckerHelperLogic>();
     return SafeArea(
       bottom: false,
       child: Scaffold(
@@ -39,7 +40,9 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
-
+            WireguardPlugin.getTunnelNames().then((value) {
+              print(value.toString());
+            });
           },
           child: Icon(Icons.add,color: Colors.black,size: 28),
         ),
