@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard_logic.dart';
 import 'package:wireguard_flutter/widgets/shimmer.dart';
 import 'package:wireguard_vpn/wireguard_vpn.dart';
@@ -95,7 +96,9 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
-
+            WireguardPlugin.getTunnelNames().then((value) {
+              print(value.toString());
+            });
           },
           child: Icon(Icons.add, color: Colors.black, size: 28),
         ),

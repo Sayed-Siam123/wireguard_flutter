@@ -14,7 +14,7 @@ class AppPages {
   static final routes = [
     GetPage(name: Routes.SPLASH, page: () => const SplashPage(), bindings: [
       SplashBinding(),
-      InternetCheckerHelperBinding(),
+      //InternetCheckerHelperBinding(),
     ]),
     GetPage(name: Routes.DASHBOARD, page: () => const DashboardPage(), bindings: [
       DashboardBinding(),

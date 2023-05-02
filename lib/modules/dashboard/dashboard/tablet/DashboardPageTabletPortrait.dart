@@ -15,7 +15,7 @@ class DashboardPageTabletPortrait extends GetView<DashboardLogic> {
   @override
   Widget build(BuildContext context) {
     Get.find<DashboardLogic>();
-    Get.find<InternetCheckerHelperLogic>();
+    //Get.find<InternetCheckerHelperLogic>();
     return SafeArea(
       bottom: false,
       child: Scaffold(
