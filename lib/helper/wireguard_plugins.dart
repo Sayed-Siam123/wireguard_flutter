@@ -62,6 +62,7 @@ class WireguardPlugin {
         tunnel: tunnel,
       ).toJson()),
     );
+    print(result);
     print('WireguardPlugin setState $result');
     return result;
   }

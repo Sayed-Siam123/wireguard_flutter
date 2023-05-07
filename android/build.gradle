@@ -1,7 +1,7 @@
 buildscript {
     ext.wireguardVersionCode = 486
     ext.wireguardVersionName = '1.0.20210211'
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '1.8.21'
 
     ext {
         activityVersion = '1.2.1'

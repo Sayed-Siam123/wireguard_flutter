@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:wireguard_flutter/helper/snackbarHelper.dart';
 import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
@@ -56,6 +58,7 @@ class DashboardLogic extends GetxController {
     //await WireguardPlugin.requestPermission();
     //await WireguardPlugin.initialize();
     //await getResponse();
+    //await getResponse1();
   }
 
   @override
@@ -84,6 +87,17 @@ class DashboardLogic extends GetxController {
       update();
       dataApi.value = data.data;
       print(dataApi.value);
+    } else{
+      SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
+    }
+
+  }
+
+  getResponse1() async{
+    dio.Response data = await apiProvider.getResponse1();
+    print(data.statusCode);
+    if (data.statusCode == 200) {
+      print(jsonDecode(data.data["data"].toString())["lines"]);
     } else{
       SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
     }

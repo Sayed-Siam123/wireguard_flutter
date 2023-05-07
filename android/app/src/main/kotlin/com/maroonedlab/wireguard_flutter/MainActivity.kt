@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import com.beust.klaxon.Klaxon
 import com.wireguard.android.backend.*
-import com.wireguard.android.util.ModuleLoader
+//import com.wireguard.android.util.ModuleLoader
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.config.Config
@@ -27,7 +27,7 @@ class MainActivity: FlutterActivity() {
     private val futureBackend = CompletableDeferred<Backend>()
     private val scope = CoroutineScope(Job() + Dispatchers.Main.immediate)
     private var backend: Backend? = null
-    private lateinit var moduleLoader: ModuleLoader
+    //private lateinit var moduleLoader: ModuleLoader
     private lateinit var rootShell: RootShell
     private lateinit var toolsInstaller: ToolsInstaller
     private var havePermission = false
@@ -82,7 +82,7 @@ class MainActivity: FlutterActivity() {
         super.onCreate(savedInstanceState)
         rootShell = RootShell(applicationContext)
         toolsInstaller = ToolsInstaller(applicationContext, rootShell)
-        moduleLoader = ModuleLoader(applicationContext, rootShell, USER_AGENT)
+        //moduleLoader = ModuleLoader(applicationContext, rootShell, USER_AGENT)
 
         scope.launch(Dispatchers.IO) {
             try {
@@ -99,31 +99,31 @@ class MainActivity: FlutterActivity() {
     private fun createBackend(): Backend {
         var backend: Backend? = null
         var didStartRootShell = false
-        if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
-            try {
-                rootShell.start()
-                didStartRootShell = true
-                moduleLoader.loadModule()
-            } catch (ignored: Exception) {
-                Log.e(TAG, Log.getStackTraceString(ignored))
-            }
-        }
-        if (ModuleLoader.isModuleLoaded()) {
-            try {
-                if (!didStartRootShell) {
-                    rootShell.start()
-                }
-                val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
-                //wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
-                backend = wgQuickBackend
-                // what is that? I totally did not understand
-                /*UserKnobs.multipleTunnels.onEach {
-                  wgQuickBackend.setMultipleTunnels(it)
-                }.launchIn(coroutineScope)*/
-            } catch (ignored: Exception) {
-                Log.e(TAG, Log.getStackTraceString(ignored))
-            }
-        }
+//        if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
+//            try {
+//                rootShell.start()
+//                didStartRootShell = true
+//                moduleLoader.loadModule()
+//            } catch (ignored: Exception) {
+//                Log.e(TAG, Log.getStackTraceString(ignored))
+//            }
+//        }
+//        if (ModuleLoader.isModuleLoaded()) {
+//            try {
+//                if (!didStartRootShell) {
+//                    rootShell.start()
+//                }
+//                val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
+//                //wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
+//                backend = wgQuickBackend
+//                // what is that? I totally did not understand
+//                UserKnobs.multipleTunnels.onEach {
+//                  wgQuickBackend.setMultipleTunnels(it)
+//                }.launchIn(coroutineScope)
+//            } catch (ignored: Exception) {
+//                Log.e(TAG, Log.getStackTraceString(ignored))
+//            }
+//        }
         if (backend == null) {
             backend = GoBackend(applicationContext)
         }
@@ -189,6 +189,7 @@ class MainActivity: FlutterActivity() {
                         )
                         .build()
                 //futureBackend.await().setState(MyTunnel(params.tunnel.name), params.tuTunnel.State.UP, config)
+
                 futureBackend.await().setState(
                         tunnel(params.tunnel.name) { state ->
                             scope.launch(Dispatchers.Main) {
@@ -211,6 +212,7 @@ class MainActivity: FlutterActivity() {
                 flutterError(result, e.reason.toString())
             } catch (e: Throwable) {
                 Log.e(TAG, "handleSetState - Can't set tunnel state: $e, ${Log.getStackTraceString(e)}")
+                Log.e(TAG, "handleSetState - Can't set tunnel state: ${e.message}")
                 flutterError(result, e.message.toString())
             }
         }
