@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+// import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -13,53 +13,53 @@ import '../services/storage_prefs.dart';
 
 abstract class FunctionsConstant{
 
-  static setStatusBarColorWhite() async{
-    await FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-    await FlutterStatusbarcolor.setStatusBarColor(ColorConstants.WHITEBACKGROUND, animate: true);
-  }
-
-  static setStatusBarColorBlack() async{
-    await FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-    await FlutterStatusbarcolor.setStatusBarColor(ColorConstants.BLACK, animate: true);
-  }
-
-  //TODO:: this is the logic for changing status bar color as per selected theme
-  static setStatusBarColor({context}) {
-    AdaptiveTheme.getThemeMode().then((AdaptiveThemeMode? value) {
-      if(value!.modeName.toLowerCase() == "light"){
-        FunctionsConstant.setStatusBarColorWhite();
-      }
-
-      else{
-        FunctionsConstant.setStatusBarColorBlack();
-      }
-    });
-  }
-
-  //TODO:: this is the logic for changing theme with statusbar color for SWITCH
-  static setThemeAndStatusBarColor({context}) {
-    AdaptiveTheme.getThemeMode().then((AdaptiveThemeMode? value) {
-      if(value!.modeName.toLowerCase() == "light"){
-        AdaptiveTheme.of(Get.context!).setDark();
-        FunctionsConstant.setStatusBarColorBlack();
-      }
-
-      else{
-        AdaptiveTheme.of(Get.context!).setLight();
-        FunctionsConstant.setStatusBarColorWhite();
-      }
-    });
-  }
-
-  static setStatusBarColorDashboard() async{
-    await FlutterStatusbarcolor.setStatusBarColor(Colors.blue, animate: true);
-
-    if (useWhiteForeground(Colors.blue)) {
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-    } else {
-      FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-    }
-  }
+  // static setStatusBarColorWhite() async{
+  //   await FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+  //   await FlutterStatusbarcolor.setStatusBarColor(ColorConstants.WHITEBACKGROUND, animate: true);
+  // }
+  //
+  // static setStatusBarColorBlack() async{
+  //   await FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+  //   await FlutterStatusbarcolor.setStatusBarColor(ColorConstants.BLACK, animate: true);
+  // }
+  //
+  // //TODO:: this is the logic for changing status bar color as per selected theme
+  // static setStatusBarColor({context}) {
+  //   AdaptiveTheme.getThemeMode().then((AdaptiveThemeMode? value) {
+  //     if(value!.modeName.toLowerCase() == "light"){
+  //       FunctionsConstant.setStatusBarColorWhite();
+  //     }
+  //
+  //     else{
+  //       FunctionsConstant.setStatusBarColorBlack();
+  //     }
+  //   });
+  // }
+  //
+  // //TODO:: this is the logic for changing theme with statusbar color for SWITCH
+  // static setThemeAndStatusBarColor({context}) {
+  //   AdaptiveTheme.getThemeMode().then((AdaptiveThemeMode? value) {
+  //     if(value!.modeName.toLowerCase() == "light"){
+  //       AdaptiveTheme.of(Get.context!).setDark();
+  //       FunctionsConstant.setStatusBarColorBlack();
+  //     }
+  //
+  //     else{
+  //       AdaptiveTheme.of(Get.context!).setLight();
+  //       FunctionsConstant.setStatusBarColorWhite();
+  //     }
+  //   });
+  // }
+  //
+  // static setStatusBarColorDashboard() async{
+  //   await FlutterStatusbarcolor.setStatusBarColor(Colors.blue, animate: true);
+  //
+  //   if (useWhiteForeground(Colors.blue)) {
+  //     FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+  //   } else {
+  //     FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+  //   }
+  // }
 
   static closeKeyboard({BuildContext? context}){
     //FocusScope.of(context!).unfocus();

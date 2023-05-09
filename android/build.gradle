@@ -1,3 +1,7 @@
+group 'com.maroonedlab.wireguard_flutter'
+version '1.0-SNAPSHOT'
+
+
 buildscript {
     ext.wireguardVersionCode = 486
     ext.wireguardVersionName = '1.0.20210211'
@@ -36,7 +40,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -59,3 +63,4 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

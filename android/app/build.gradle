@@ -21,10 +21,12 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+//apply plugin: 'com.android.library'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'kotlin-kapt'
+
 
   def keystoreProperties = new Properties()
   def keystorePropertiesFile = rootProject.file('key.properties')
@@ -33,18 +35,16 @@ apply plugin: 'kotlin-kapt'
   }
 
   android {
-              
-    compileSdkVersion 33
-    ndkVersion flutter.ndkVersion
+    compileSdk = 33
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
         coreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets {
@@ -60,6 +60,7 @@ apply plugin: 'kotlin-kapt'
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        buildConfigField 'int', 'MIN_SDK_VERSION', "$minSdkVersion.apiLevel"
     }
 
     signingConfigs {
@@ -75,6 +76,13 @@ apply plugin: 'kotlin-kapt'
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+//            minifyEnabled true
+//            shrinkResources true
+//            proguardFiles "proguard-android-optimize.txt", "proguard-rules.pro"
+//            packagingOptions {
+//                exclude "DebugProbesKt.bin"
+//                exclude "kotlin-tooling-metadata.json"
+//            }
             signingConfig signingConfigs.release
             applicationVariants.all { variant ->
                 variant.outputs.all {
@@ -83,7 +91,8 @@ apply plugin: 'kotlin-kapt'
             }
         }
     }
-}
+      namespace 'com.maroonedlab.wireguard_flutter'
+  }
 
 flutter {
     source '../..'
@@ -91,13 +100,13 @@ flutter {
 
 dependencies {
     //implementation(project(":tunnel"))
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     //implementation 'com.wireguard.android:tunnel:1.0.20210211'
     implementation 'com.wireguard.android:tunnel:1.0.20230427'
-    //implementation 'com.wireguard.android:tunnel:1.0.20230502'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-    implementation 'com.beust:klaxon:5.5'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0'
+    implementation 'com.beust:klaxon:5.6'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 
     implementation "androidx.multidex:multidex:2.0.1"
     /// to run wireguard on Android 25 or lower
