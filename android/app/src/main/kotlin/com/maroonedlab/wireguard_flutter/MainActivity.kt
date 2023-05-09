@@ -98,7 +98,7 @@ class MainActivity: FlutterActivity() {
     //
     private fun createBackend(): Backend {
         var backend: Backend? = null
-        var didStartRootShell = false
+//        var didStartRootShell = false
 //        if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
 //            try {
 //                rootShell.start()
