@@ -94,6 +94,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
+            vpnActivate = !vpnActivate;
             final result = WireguardPlugin.setState(isConnected: !vpnActivate, tunnel: Tunnel(
                 name: initName,
                 address: initAddress,
@@ -105,10 +106,10 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                 peerEndpoint: initEndpoint,preSharedKey: presharedKey)
             );
 
-            //print(result.then((value) => print(value)));
+            print(result.then((value) => print(value)));
 
           },
-          child: Icon(Icons.add, color: Colors.black, size: 28),
+          child: const Icon(Icons.add, color: Colors.black, size: 28),
         ),
       ),
     );

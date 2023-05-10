@@ -6,9 +6,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-//import com.beust.klaxon.Klaxon
+import androidx.multidex.BuildConfig
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.BackendException
 import com.wireguard.android.backend.GoBackend
@@ -27,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.Locale
 
 
@@ -44,6 +44,7 @@ class MainActivity: FlutterActivity() {
     private var havePermission = false
     private var methodChannel: MethodChannel? = null
     var gson = Gson()
+
 
     // Have to keep tunnels, because WireGuard requires to use the _same_
     // instance of a tunnel every time you change the state.
@@ -200,90 +201,59 @@ class MainActivity: FlutterActivity() {
         scope.launch(Dispatchers.IO) {
             try {
 
-                // val params = Klaxon().parse<SetStateParams>(arguments.toString())
-
-                val params = gson.fromJson(arguments.toString(), SetStateParams::class.java)
-
                 Log.i(TAG, "arguments - $arguments")
-                Log.i(TAG, "params state - ${params.state.toString()}")
-                Log.i(TAG, "params - ${params.tunnel}")
 
-                if (params == null) {
+                if (arguments == "") {
                     flutterError(result, "Set state params is missing")
                     return@launch
                 }
 
-               /* val config = Config.Builder()
+                val tunnel = JSONObject(arguments.toString()).getJSONObject("tunnel")
+
+                val params = TunnelData(tunnel.getString("name"),
+                    tunnel.getString("address"),
+                    tunnel.getString("listenPort"),
+                    tunnel.getString("dnsServer"),
+                    tunnel.getString("privateKey"),
+                    tunnel.getString("peerAllowedIp"),
+                    tunnel.getString("peerPublicKey"),
+                    tunnel.getString("peerEndpoint"),
+                    tunnel.getString("preSharedKey")
+                )
+
+                val states = JSONObject(arguments.toString())
+                val statesData = states.getBoolean("state")
+
+                val config = Config.Builder()
                         .setInterface(
                                 Interface.Builder()
-                                        .parseAddresses(params.tunnel.address)
-                                        .parseListenPort(params.tunnel.listenPort)
-                                        .parseDnsServers(params.tunnel.dnsServer)
-                                        .parsePrivateKey(params.tunnel.privateKey)
+                                        .parseAddresses(params.address)
+                                        .parseListenPort(params.listenPort)
+                                        .parseDnsServers(params.dnsServer)
+                                        .parsePrivateKey(params.privateKey)
                                         .build(),
                         )
                         .addPeer(
                                 Peer.Builder()
-                                        .parseAllowedIPs(params.tunnel.peerAllowedIp)
-                                        .parsePublicKey(params.tunnel.peerPublicKey)
-                                        .parseEndpoint(params.tunnel.peerEndpoint)
-                                        .parsePreSharedKey(params.tunnel.preSharedKey)
+                                        .parseAllowedIPs(params.peerAllowedIp)
+                                        .parsePublicKey(params.peerPublicKey)
+                                        .parseEndpoint(params.peerEndpoint)
+                                        .parsePreSharedKey(params.preSharedKey)
                                         .build()
                         )
-                        .build()*/
-
-                val config = Config.Builder()
-                    .setInterface(
-                        Interface.Builder()
-                            .parseAddresses("10.6.0.3")
-                            .parseListenPort("51820")
-                            .parseDnsServers("10.2.0.100")
-                            .parsePrivateKey("ePJuLMPOgvl1rnX9esPnGMX+j5ZWzZNq6kvR9myajkk=")
-                            .build(),
-                    )
-                    .addPeer(
-                        Peer.Builder()
-                            .parseAllowedIPs("0.0.0.0/0, ::/0")
-                            .parsePublicKey("OOsZp5rLjlCwdUlFkOjLzPx4jLcxTrvFpJBN8JjIyyE=")
-                            .parseEndpoint("216.24.253.25:51820")
-                            .parsePreSharedKey("FmGa7zgva7L+GYKpCFPbpgbMIatn+aJi6DuCI3odUMQ=")
-                            .build()
-                    )
-                    .build()
-
-                //futureBackend.await().setState(MyTunnel(params.tunnel.name), params.tuTunnel.State.UP, config)
-
-/*                futureBackend.await().setState(
-                        tunnel(params.tunnel.name) { state ->
-                            scope.launch(Dispatchers.Main) {
-                                Log.i(TAG, "onStateChange - $state")
-                                methodChannel?.invokeMethod(
-                                        "onStateChange",
-                                    gson.toJson(StateChangeData(params.tunnel.name, state == Tunnel.State.UP))
-//                                        Klaxon().toJsonString(
-//                                                StateChangeData(params.tunnel.name, state == Tunnel.State.UP)
-//                                        )
-                                )
-                            }
-                        },
-                        if (params.state) Tunnel.State.UP else Tunnel.State.DOWN,
-                        config
-                )*/
+                        .build()
 
                 futureBackend.await().setState(
-                        tunnel("MyWireguardVPN") { state ->
+                        tunnel(params.name) { state ->
                             scope.launch(Dispatchers.Main) {
                                 Log.i(TAG, "onStateChange - $state")
                                 methodChannel?.invokeMethod(
                                         "onStateChange",
-                                    gson.toJson(StateChangeData("MyWireguardVPN", state == Tunnel.State.UP))
-//                                        Klaxon().toJsonString(
-//                                                StateChangeData(params.tunnel.name, state == Tunnel.State.UP)
-//                                        )
+                                    gson.toJson(StateChangeData(params.name, state == Tunnel.State.UP))
                                 )
                             }
                         },
-                        if (params.state) Tunnel.State.UP else Tunnel.State.DOWN,
+                        if (statesData) Tunnel.State.UP else Tunnel.State.DOWN,
                         config
                 )
 
@@ -294,7 +264,6 @@ class MainActivity: FlutterActivity() {
                 flutterError(result, e.reason.toString())
             } catch (e: Throwable) {
                 Log.e(TAG, "handleSetState - Can't set tunnel state: $e, ${Log.getStackTraceString(e)}")
-                Log.e(TAG, "handleSetState - Can't set tunnel state: ${e.message}")
                 flutterError(result, e.message.toString())
             }
         }
@@ -326,10 +295,7 @@ class MainActivity: FlutterActivity() {
                 val stats = futureBackend.await().getStatistics(tunnel(tunnelName))
 
                 flutterSuccess(result,
-//                    Klaxon().toJsonString(
-//                        Stats(stats.totalRx(), stats.totalTx())
-//                    )
-                gson.toJson(Stats(stats.totalRx(), stats.totalTx()))
+                    gson.toJson(Stats(stats.totalRx(), stats.totalTx()))
                 )
 
             } catch (e: BackendException) {
