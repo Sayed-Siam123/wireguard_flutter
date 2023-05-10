@@ -108,9 +108,9 @@ dependencies {
     implementation 'com.wireguard.android:tunnel:1.0.20230427'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0'
-    implementation 'com.beust:klaxon:5.6'
+    //implementation 'com.beust:klaxon:5.6'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-
     implementation "androidx.multidex:multidex:2.0.1"
     /// to run wireguard on Android 25 or lower
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"

@@ -1,13 +1,18 @@
 package com.maroonedlab.wireguard_flutter
 
+//import com.wireguard.android.util.ModuleLoader
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import com.beust.klaxon.Klaxon
-import com.wireguard.android.backend.*
-//import com.wireguard.android.util.ModuleLoader
+//import com.beust.klaxon.Klaxon
+import com.google.gson.Gson
+import com.wireguard.android.backend.Backend
+import com.wireguard.android.backend.BackendException
+import com.wireguard.android.backend.GoBackend
+import com.wireguard.android.backend.Tunnel
+import com.wireguard.android.backend.WgQuickBackend
 import com.wireguard.android.util.RootShell
 import com.wireguard.android.util.ToolsInstaller
 import com.wireguard.config.Config
@@ -16,8 +21,13 @@ import com.wireguard.config.Peer
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import kotlinx.coroutines.*
-import java.util.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.util.Locale
+
 
 class MainActivity: FlutterActivity() {
 
@@ -32,7 +42,7 @@ class MainActivity: FlutterActivity() {
     private lateinit var toolsInstaller: ToolsInstaller
     private var havePermission = false
     private var methodChannel: MethodChannel? = null
-
+    var gson = Gson()
 
     // Have to keep tunnels, because WireGuard requires to use the _same_
     // instance of a tunnel every time you change the state.
@@ -79,6 +89,7 @@ class MainActivity: FlutterActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i(TAG, "Starting on Create")
         super.onCreate(savedInstanceState)
         rootShell = RootShell(applicationContext)
         toolsInstaller = ToolsInstaller(applicationContext, rootShell)
@@ -88,7 +99,9 @@ class MainActivity: FlutterActivity() {
             try {
                 backend = createBackend()
                 futureBackend.complete(backend!!)
+                Log.i(TAG, "Checking Permission")
                 checkPermission()
+                Log.i(TAG, "Taking Permission Done")
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
@@ -97,7 +110,30 @@ class MainActivity: FlutterActivity() {
 
     //
     private fun createBackend(): Backend {
+
         var backend: Backend? = null
+        var didStartRootShell = false
+        try {
+            if (!didStartRootShell) {
+                rootShell.start()
+            }
+            val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
+            //wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
+            backend = wgQuickBackend
+            // what is that? I totally did not understand
+            /*UserKnobs.multipleTunnels.onEach {
+            wgQuickBackend.setMultipleTunnels(it)
+            }.launchIn(coroutineScope)*/
+        } catch (ignored: Exception) {
+            Log.e(TAG, Log.getStackTraceString(ignored))
+        }
+        if (backend == null) {
+            backend = GoBackend(applicationContext)
+        }
+        return backend
+
+    //        var backend: Backend? = null
+//
 //        var didStartRootShell = false
 //        if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
 //            try {
@@ -124,10 +160,10 @@ class MainActivity: FlutterActivity() {
 //                Log.e(TAG, Log.getStackTraceString(ignored))
 //            }
 //        }
-        if (backend == null) {
-            backend = GoBackend(applicationContext)
-        }
-        return backend
+//        if (backend == null) {
+//            backend = GoBackend(applicationContext)
+//        }
+//        return backend
     }
 
     private fun checkPermission() {
@@ -163,7 +199,12 @@ class MainActivity: FlutterActivity() {
         scope.launch(Dispatchers.IO) {
             try {
 
-                val params = Klaxon().parse<SetStateParams>(arguments.toString())
+                // val params = Klaxon().parse<SetStateParams>(arguments.toString())
+
+                val params = gson.fromJson(arguments.toString(), SetStateParams::class.java)
+
+                Log.i(TAG, "arguments - $arguments")
+                Log.i(TAG, "params - ${params}")
 
                 if (params == null) {
                     flutterError(result, "Set state params is missing")
@@ -196,9 +237,10 @@ class MainActivity: FlutterActivity() {
                                 Log.i(TAG, "onStateChange - $state")
                                 methodChannel?.invokeMethod(
                                         "onStateChange",
-                                        Klaxon().toJsonString(
-                                                StateChangeData(params.tunnel.name, state == Tunnel.State.UP)
-                                        )
+                                    gson.toJson(StateChangeData(params.tunnel.name, state == Tunnel.State.UP))
+//                                        Klaxon().toJsonString(
+//                                                StateChangeData(params.tunnel.name, state == Tunnel.State.UP)
+//                                        )
                                 )
                             }
                         },
@@ -243,9 +285,12 @@ class MainActivity: FlutterActivity() {
             try {
                 val stats = futureBackend.await().getStatistics(tunnel(tunnelName))
 
-                flutterSuccess(result, Klaxon().toJsonString(
-                        Stats(stats.totalRx(), stats.totalTx())
-                ))
+                flutterSuccess(result,
+//                    Klaxon().toJsonString(
+//                        Stats(stats.totalRx(), stats.totalTx())
+//                    )
+                gson.toJson(Stats(stats.totalRx(), stats.totalTx()))
+                )
 
             } catch (e: BackendException) {
                 Log.e(TAG, "handleGetStats - BackendException - ERROR - ${e.reason}")
@@ -276,7 +321,6 @@ class MyTunnel(private val name: String,
     override fun onStateChange(newState: Tunnel.State) {
         onStateChanged?.invoke(newState)
     }
-
 }
 
 class SetStateParams(
