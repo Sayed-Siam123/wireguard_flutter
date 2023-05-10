@@ -80,12 +80,7 @@ apply plugin: 'kotlin-kapt'
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             minifyEnabled true
-            shrinkResources true
             proguardFiles "proguard-android-optimize.txt", "proguard-rules.pro"
-            packagingOptions {
-                exclude "DebugProbesKt.bin"
-                exclude "kotlin-tooling-metadata.json"
-            }
             signingConfig signingConfigs.release
             applicationVariants.all { variant ->
                 variant.outputs.all {

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 //import com.beust.klaxon.Klaxon
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.wireguard.android.backend.Backend
 import com.wireguard.android.backend.BackendException
 import com.wireguard.android.backend.GoBackend
@@ -204,14 +205,15 @@ class MainActivity: FlutterActivity() {
                 val params = gson.fromJson(arguments.toString(), SetStateParams::class.java)
 
                 Log.i(TAG, "arguments - $arguments")
-                Log.i(TAG, "params - ${params}")
+                Log.i(TAG, "params state - ${params.state.toString()}")
+                Log.i(TAG, "params - ${params.tunnel}")
 
                 if (params == null) {
                     flutterError(result, "Set state params is missing")
                     return@launch
                 }
 
-                val config = Config.Builder()
+               /* val config = Config.Builder()
                         .setInterface(
                                 Interface.Builder()
                                         .parseAddresses(params.tunnel.address)
@@ -228,10 +230,30 @@ class MainActivity: FlutterActivity() {
                                         .parsePreSharedKey(params.tunnel.preSharedKey)
                                         .build()
                         )
-                        .build()
+                        .build()*/
+
+                val config = Config.Builder()
+                    .setInterface(
+                        Interface.Builder()
+                            .parseAddresses("10.6.0.3")
+                            .parseListenPort("51820")
+                            .parseDnsServers("10.2.0.100")
+                            .parsePrivateKey("ePJuLMPOgvl1rnX9esPnGMX+j5ZWzZNq6kvR9myajkk=")
+                            .build(),
+                    )
+                    .addPeer(
+                        Peer.Builder()
+                            .parseAllowedIPs("0.0.0.0/0, ::/0")
+                            .parsePublicKey("OOsZp5rLjlCwdUlFkOjLzPx4jLcxTrvFpJBN8JjIyyE=")
+                            .parseEndpoint("216.24.253.25:51820")
+                            .parsePreSharedKey("FmGa7zgva7L+GYKpCFPbpgbMIatn+aJi6DuCI3odUMQ=")
+                            .build()
+                    )
+                    .build()
+
                 //futureBackend.await().setState(MyTunnel(params.tunnel.name), params.tuTunnel.State.UP, config)
 
-                futureBackend.await().setState(
+/*                futureBackend.await().setState(
                         tunnel(params.tunnel.name) { state ->
                             scope.launch(Dispatchers.Main) {
                                 Log.i(TAG, "onStateChange - $state")
@@ -246,7 +268,25 @@ class MainActivity: FlutterActivity() {
                         },
                         if (params.state) Tunnel.State.UP else Tunnel.State.DOWN,
                         config
+                )*/
+
+                futureBackend.await().setState(
+                        tunnel("MyWireguardVPN") { state ->
+                            scope.launch(Dispatchers.Main) {
+                                Log.i(TAG, "onStateChange - $state")
+                                methodChannel?.invokeMethod(
+                                        "onStateChange",
+                                    gson.toJson(StateChangeData("MyWireguardVPN", state == Tunnel.State.UP))
+//                                        Klaxon().toJsonString(
+//                                                StateChangeData(params.tunnel.name, state == Tunnel.State.UP)
+//                                        )
+                                )
+                            }
+                        },
+                        if (params.state) Tunnel.State.UP else Tunnel.State.DOWN,
+                        config
                 )
+
                 Log.i(TAG, "handleSetState - success!")
                 flutterSuccess(result, true)
             } catch (e: BackendException) {
