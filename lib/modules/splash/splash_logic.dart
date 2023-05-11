@@ -10,7 +10,7 @@ class SplashLogic extends GetxController {
     // TODO: implement onInit
     super.onInit();
     await Future.delayed(const Duration(seconds: 4));
-    //await FunctionsConstant.setStatusBarColor(context: Get.context!);
+    // await FunctionsConstant.setStatusBarColor(context: Get.context!);
     Get.offNamed(Routes.DASHBOARD);
   }
 

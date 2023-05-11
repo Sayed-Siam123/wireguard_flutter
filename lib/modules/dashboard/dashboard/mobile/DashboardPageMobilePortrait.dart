@@ -52,7 +52,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    /*controller.networkConfig.value.isNotEmpty ? Expanded(
+                    controller.networkConfig.value.isNotEmpty ? Expanded(
                       child: ListView.builder(
                         itemCount: controller.networkConfig.value.length,
                         itemBuilder: (context, index) {
@@ -82,10 +82,9 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                           );
                         },
                       ),
-                    ) : */
-                    const Text("Press + button to add vpn configaration"),
-                    // controller.isLoading.value ? ShimmerConstant.shimmerAdd()
-                    //     : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
+                    ) :  const Text("Press + button to add vpn configaration"),
+                    controller.isLoading.value ? ShimmerConstant.shimmerAdd()
+                        : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
                   ],
                 );
               },

@@ -57,7 +57,7 @@ class DashboardLogic extends GetxController {
     super.onInit();
     //await WireguardPlugin.requestPermission();
     //await WireguardPlugin.initialize();
-    //await getResponse();
+    await getResponse();
     //await getResponse1();
   }
 
