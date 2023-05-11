@@ -61,14 +61,6 @@ flutter_app_name:
 
 flutter:
 
-#  plugin:
-#    platforms:
-#      android:
-#        package: com.maroonedlab.wireguard_flutter
-#        pluginClass: WireguardPlugin
-#      ios:
-#        pluginClass: WireguardPlugin
-
   uses-material-design: true
 
   assets:

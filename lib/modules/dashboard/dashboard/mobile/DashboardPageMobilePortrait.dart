@@ -82,7 +82,8 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                           );
                         },
                       ),
-                    ) :  const Text("Press + button to add vpn configaration"),
+                    ) :
+                    const Text("Press + button to add vpn configaration"),
                     controller.isLoading.value ? ShimmerConstant.shimmerAdd()
                         : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
                   ],
@@ -94,7 +95,8 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
           backgroundColor: Colors.white,
           onPressed: () {
             vpnActivate = !vpnActivate;
-            final result = WireguardPlugin.setState(isConnected: !vpnActivate, tunnel: Tunnel(
+
+            final result = WireguardPlugin.setState(isConnected: vpnActivate ? false : true, tunnel: Tunnel(
                 name: initName,
                 address: initAddress,
                 listenPort: initPort,

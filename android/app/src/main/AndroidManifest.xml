@@ -12,7 +12,7 @@
         android:protectionLevel="dangerous" />
 
    <application
-        android:label="wireguard_flutter"
+        android:label="Echo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
