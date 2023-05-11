@@ -72,6 +72,7 @@ class MainActivity: FlutterActivity() {
 
             if (!havePermission) {
                 flutterError(result, "Have no permission to configure VPN")
+//                checkPermissionFromFlutter(result)
                 return@setMethodCallHandler
             }
 
@@ -81,7 +82,6 @@ class MainActivity: FlutterActivity() {
                 "getStats" -> handleGetStats(call.arguments, result)
                 else -> flutterNotImplemented(result)
             }
-
         }
     }
 
@@ -138,8 +138,21 @@ class MainActivity: FlutterActivity() {
         if (intent != null) {
             havePermission = false
             startActivityForResult(intent, permissionRequestCode)
+            //flutterError()
         } else {
             havePermission = true
+        }
+    }
+
+    private fun checkPermissionFromFlutter(result: MethodChannel.Result) {
+        val intent = GoBackend.VpnService.prepare(this)
+        if (intent != null) {
+            havePermission = false
+            startActivityForResult(intent, permissionRequestCode)
+            flutterError(result,"no_permission")
+        } else {
+            havePermission = true
+            flutterSuccess(result,"yes_permission")
         }
     }
 

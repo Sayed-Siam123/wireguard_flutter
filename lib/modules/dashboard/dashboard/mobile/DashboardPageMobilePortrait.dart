@@ -94,6 +94,11 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
+
+            WireguardPlugin.requestPermission().then((value) {
+              print(value);
+            });
+
             // vpnActivate = !vpnActivate;
             //
             // final result = WireguardPlugin.setState(isConnected: vpnActivate ? false : true, tunnel: Tunnel(

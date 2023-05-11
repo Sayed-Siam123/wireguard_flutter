@@ -19,7 +19,7 @@ class WireguardPlugin {
   static Stream<StateChangeData> get tunnelState =>
       _tunnelsStateController.stream;
 
-  static Future<bool> requestPermission() async {
+  static Future<dynamic> requestPermission() async {
     print('WireguardPlugin requestPermission ');
     final result = await _channel.invokeMethod('requestPermission');
     print('WireguardPlugin requestPermission $result');
@@ -41,7 +41,6 @@ class WireguardPlugin {
             print('wireguard plugin setMethodCallHandler error: $e');
             print(s);
           }
-
           break;
       }
     });
