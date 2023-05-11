@@ -7,14 +7,14 @@
 
     <permission android:name="${applicationId}.permission.CONTROL_TUNNELS"
         android:description="@string/permission_description"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="@string/permission_label"
         android:protectionLevel="dangerous" />
 
    <application
         android:label="Echo"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

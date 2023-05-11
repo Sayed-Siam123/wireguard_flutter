@@ -34,17 +34,28 @@ class DashboardLogic extends GetxController {
   var networkConfig = [
     {
       "vpn_active" : false,
-      "init_name" : "Echo Demo",
-      "init_address" : "10.7.0.2/24",
+      "init_name" : "Echo VPN 1",
+      "init_address" : "10.6.0.3",
       "init_port" : "51820",
-      "init_dns_server" : "8.8.8.8, 8.8.4.4",
-      "init_private_key" : "aH70+AaxuuuxVkhU6qwoT+qzmwd9fnnim2BvfjBigFs=",
+      "init_dns_server" : "10.2.0.100",
+      "init_private_key" : "ePJuLMPOgvl1rnX9esPnGMX+j5ZWzZNq6kvR9myajkk=",
       "init_allowed_ip" : "0.0.0.0/0, ::/0",
-      "init_public_key" : "xeH8yG/rp2u5QM+lpL7TZgVpjmt0n3upo67j/FBrzlQ=",
+      "init_public_key" : "OOsZp5rLjlCwdUlFkOjLzPx4jLcxTrvFpJBN8JjIyyE=",
       "init_end_point" : "216.24.253.25:51820",
-      "pre_shared_key" : "CLQbxaH3mFJQnpmEDm6jxEdhhDCK/JCkJVja22BiaCg="
+      "pre_shared_key" : "FmGa7zgva7L+GYKpCFPbpgbMIatn+aJi6DuCI3odUMQ="
     }
   ].obs;
+
+  // bool vpnActivate = false;
+  // final String initName = 'MyWireguardVPN';
+  // final String initAddress = "10.6.0.3";
+  // final String initPort = "51820";
+  // final String initDnsServer = "10.2.0.100";
+  // final String initPrivateKey = "ePJuLMPOgvl1rnX9esPnGMX+j5ZWzZNq6kvR9myajkk=";
+  // final String initAllowedIp = "0.0.0.0/0, ::/0";
+  // final String initPublicKey = "OOsZp5rLjlCwdUlFkOjLzPx4jLcxTrvFpJBN8JjIyyE=";
+  // final String initEndpoint = "216.24.253.25:51820";
+  // final String presharedKey = 'FmGa7zgva7L+GYKpCFPbpgbMIatn+aJi6DuCI3odUMQ=';
 
   var vpnActivate = false.obs;
 
@@ -57,7 +68,7 @@ class DashboardLogic extends GetxController {
     super.onInit();
     //await WireguardPlugin.requestPermission();
     //await WireguardPlugin.initialize();
-    await getResponse();
+    //await getResponse();
     //await getResponse1();
   }
 

@@ -54,6 +54,7 @@ class WireguardPlugin {
     required bool isConnected,
     required Tunnel tunnel,
   }) async {
+
     print('WireguardPlugin setState');
     final result = await _channel.invokeMethod(
       'setState',

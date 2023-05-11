@@ -101,9 +101,7 @@ class MainActivity: FlutterActivity() {
             try {
                 backend = createBackend()
                 futureBackend.complete(backend!!)
-                Log.i(TAG, "Checking Permission")
                 checkPermission()
-                Log.i(TAG, "Taking Permission Done")
             } catch (e: Throwable) {
                 Log.e(TAG, Log.getStackTraceString(e))
             }
@@ -133,39 +131,6 @@ class MainActivity: FlutterActivity() {
             backend = GoBackend(applicationContext)
         }
         return backend
-
-    //        var backend: Backend? = null
-//
-//        var didStartRootShell = false
-//        if (!ModuleLoader.isModuleLoaded() && moduleLoader.moduleMightExist()) {
-//            try {
-//                rootShell.start()
-//                didStartRootShell = true
-//                moduleLoader.loadModule()
-//            } catch (ignored: Exception) {
-//                Log.e(TAG, Log.getStackTraceString(ignored))
-//            }
-//        }
-//        if (ModuleLoader.isModuleLoaded()) {
-//            try {
-//                if (!didStartRootShell) {
-//                    rootShell.start()
-//                }
-//                val wgQuickBackend = WgQuickBackend(applicationContext, rootShell, toolsInstaller)
-//                //wgQuickBackend.setMultipleTunnels(UserKnobs.multipleTunnels.first())
-//                backend = wgQuickBackend
-//                // what is that? I totally did not understand
-//                UserKnobs.multipleTunnels.onEach {
-//                  wgQuickBackend.setMultipleTunnels(it)
-//                }.launchIn(coroutineScope)
-//            } catch (ignored: Exception) {
-//                Log.e(TAG, Log.getStackTraceString(ignored))
-//            }
-//        }
-//        if (backend == null) {
-//            backend = GoBackend(applicationContext)
-//        }
-//        return backend
     }
 
     private fun checkPermission() {
@@ -200,9 +165,6 @@ class MainActivity: FlutterActivity() {
 
         scope.launch(Dispatchers.IO) {
             try {
-
-                Log.i(TAG, "arguments - $arguments")
-
                 if (arguments == "") {
                     flutterError(result, "Set state params is missing")
                     return@launch

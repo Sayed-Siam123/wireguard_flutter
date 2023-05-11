@@ -61,12 +61,12 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                               Expanded(
                                 child: StatefulBuilder(
                                     builder:(context, setState) => SwitchListTile(
-                                      // value: controller.networkConfig
-                                      //     .value[index]["vpn_active"] as bool,
-                                      value: vpnActivate,
+                                      value: controller.networkConfig
+                                          .value[index]["vpn_active"] as bool,
+                                      //value: vpnActivate,
                                       onChanged: (value) {
                                        setState((){
-                                         //_activateVpn(value, index);
+                                         _activateVpn(value, index);
                                        });
                                       },
                                       title: Text(controller.networkConfig
@@ -84,8 +84,8 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                       ),
                     ) :
                     const Text("Press + button to add vpn configaration"),
-                    controller.isLoading.value ? ShimmerConstant.shimmerAdd()
-                        : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
+                    // controller.isLoading.value ? ShimmerConstant.shimmerAdd()
+                    //     : Image.network(Uri.parse(controller.dataApi[0]["file"]).toString(),height: 60,width: Get.width,fit: BoxFit.cover),
                   ],
                 );
               },
@@ -94,20 +94,20 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () {
-            vpnActivate = !vpnActivate;
-
-            final result = WireguardPlugin.setState(isConnected: vpnActivate ? false : true, tunnel: Tunnel(
-                name: initName,
-                address: initAddress,
-                listenPort: initPort,
-                dnsServer: initDnsServer,
-                privateKey: initPrivateKey,
-                peerAllowedIp: initAllowedIp,
-                peerPublicKey: initPublicKey,
-                peerEndpoint: initEndpoint,preSharedKey: presharedKey)
-            );
-
-            print(result.then((value) => print(value)));
+            // vpnActivate = !vpnActivate;
+            //
+            // final result = WireguardPlugin.setState(isConnected: vpnActivate ? false : true, tunnel: Tunnel(
+            //     name: initName,
+            //     address: initAddress,
+            //     listenPort: initPort,
+            //     dnsServer: initDnsServer,
+            //     privateKey: initPrivateKey,
+            //     peerAllowedIp: initAllowedIp,
+            //     peerPublicKey: initPublicKey,
+            //     peerEndpoint: initEndpoint,preSharedKey: presharedKey)
+            // );
+            //
+            // print(result.then((value) => print(value)));
 
           },
           child: const Icon(Icons.add, color: Colors.black, size: 28),
@@ -116,54 +116,31 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
     );
   }
 
- /* void _activateVpn(bool value, index) async {
-    print("Here");
-    print(value);
-    controller.networkConfig.value[index]["vpn_active"] = vpnActivate;
+  void _activateVpn(bool value, index) async {
+
+    controller.networkConfig.value[index]["vpn_active"] = value;
     print(controller.networkConfig.value[index]["vpn_active"]);
 
-    *//* final results =
-    await controller.wireGuardFlutterPlugin.changeStateParams(SetStateParams(
-      state: controller.networkConfig.value[index]["vpn_active"] as bool,
-      tunnel: Tunnel(
-        name: controller.networkConfig.value[index]["init_name"].toString(),
-        address: controller.networkConfig.value[index]["init_name"].toString(),
-        dnsServer: controller.networkConfig.value[index]["init_dns_server"]
-            .toString(),
-        listenPort: controller.networkConfig.value[index]["init_port"]
-            .toString(),
-        peerAllowedIp: controller.networkConfig.value[index]["init_allowed_ip"]
-            .toString(),
-        peerEndpoint: controller.networkConfig.value[index]["init_end_point"]
-            .toString(),
-        peerPublicKey: controller.networkConfig.value[index]["init_public_key"]
-            .toString(),
-        privateKey: controller.networkConfig.value[index]["init_private_key"]
-            .toString(),
-        peerPresharedKey: controller.networkConfig
-            .value[index]["pre_shared_key"].toString(),
-      ),
-    ));*//*
+    final result = WireguardPlugin.setState(isConnected: controller.networkConfig.value[index]["vpn_active"] as bool,
+        tunnel: Tunnel(
+          name: controller.networkConfig.value[index]["init_name"].toString(),
+          address: controller.networkConfig.value[index]["init_address"].toString(),
+          dnsServer: controller.networkConfig.value[index]["init_dns_server"].toString(),
+          listenPort: controller.networkConfig.value[index]["init_port"].toString(),
+          peerAllowedIp: controller.networkConfig.value[index]["init_allowed_ip"].toString(),
+          peerEndpoint: controller.networkConfig.value[index]["init_end_point"].toString(),
+          peerPublicKey: controller.networkConfig.value[index]["init_public_key"].toString(),
+          privateKey: controller.networkConfig.value[index]["init_private_key"].toString(),
+          preSharedKey: controller.networkConfig.value[index]["pre_shared_key"].toString(),
+        )
+    );
 
-    final results = await wireGuardFlutterPlugin.changeStateParams(SetStateParams(
-      state: !vpnActivate,
-      tunnel: Tunnel(
-          name: initName,
-          address: initAddress,
-          dnsServer: initDnsServer,
-          listenPort: initPort,
-          peerAllowedIp: initAllowedIp,
-          peerEndpoint: initEndpoint,
-          peerPublicKey: initPublicKey,
-          privateKey: initPrivateKey,
-          peerPresharedKey: presharedKey),
-    ));
+    print(result);
 
-    print(results!);
+//    vpnActivate = result ?? false;
 
-    vpnActivate = results ?? false;
     controller.update();
     //controller.vpnActivate.value ? _obtainStats() : null;
-  }*/
+  }
 
 }
