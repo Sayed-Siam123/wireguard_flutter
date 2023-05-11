@@ -72,7 +72,6 @@ class MainActivity: FlutterActivity() {
 
             if (!havePermission) {
                 flutterError(result, "Have no permission to configure VPN")
-//                checkPermissionFromFlutter(result)
                 return@setMethodCallHandler
             }
 
@@ -82,6 +81,7 @@ class MainActivity: FlutterActivity() {
                 "getStats" -> handleGetStats(call.arguments, result)
                 else -> flutterNotImplemented(result)
             }
+
         }
     }
 
