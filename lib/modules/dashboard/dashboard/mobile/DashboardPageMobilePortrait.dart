@@ -66,7 +66,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
                                       //value: vpnActivate,
                                       onChanged: (value) {
                                        setState((){
-                                         _activateVpn(value, index);
+                                         controller.activateVpn(value, index);
                                        });
                                       },
                                       title: Text(controller.networkConfig
@@ -95,9 +95,9 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
           backgroundColor: Colors.white,
           onPressed: () {
 
-            WireguardPlugin.requestPermission().then((value) {
-              print(value);
-            });
+            // WireguardPlugin.requestPermission().then((value) {
+            //   print(value);
+            // });
 
             // vpnActivate = !vpnActivate;
             //

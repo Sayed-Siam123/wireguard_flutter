@@ -70,17 +70,54 @@ class MainActivity: FlutterActivity() {
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channel)
         methodChannel?.setMethodCallHandler { call, result ->
 
-            if (!havePermission) {
-                flutterError(result, "Have no permission to configure VPN")
-                return@setMethodCallHandler
+//            if (!havePermission) {
+//                flutterError(result, "Have no permission to configure VPN")
+//                return@setMethodCallHandler
+//            }
+
+//            when (call.method) {
+//                "getTunnelNames" -> handleGetNames(result)
+//                "setState" -> handleSetState(call.arguments, result)
+//                "getStats" -> handleGetStats(call.arguments, result)
+//                "requestPermission" -> checkPermissionFromFlutter(result)
+//                else if -> checkPermissionFromFlutter(result)
+//                else -> flutterNotImplemented(result)
+//            }
+
+
+            if(call.method == "getTunnelNames"){
+                if(!havePermission){
+                    checkPermissionFromFlutter(result)
+                }
+                else{
+                    handleGetNames(result)
+                }
             }
 
-            when (call.method) {
-                "getTunnelNames" -> handleGetNames(result)
-                "setState" -> handleSetState(call.arguments, result)
-                "getStats" -> handleGetStats(call.arguments, result)
-                else -> flutterNotImplemented(result)
+            else if(call.method == "setState"){
+                if(!havePermission){
+                    checkPermissionFromFlutter(result)
+                }
+                else{
+                    handleSetState(call.arguments, result)
+                }
             }
+
+            else if(call.method == "getStats"){
+                if(!havePermission){
+                    checkPermissionFromFlutter(result)
+                }
+                else{
+                    handleGetStats(call.arguments, result)
+                }
+            }
+            else if(call.method == "requestPermission"){
+                checkPermissionFromFlutter(result)
+            }
+            else{
+                flutterNotImplemented(result)
+            }
+
 
         }
     }

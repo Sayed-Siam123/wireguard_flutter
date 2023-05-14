@@ -7,6 +7,7 @@ import 'package:wireguard_flutter/repository/apiprovider.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../../helper/loader.dart';
+import '../../model/tunnel.dart';
 
 class DashboardLogic extends GetxController {
 
@@ -33,7 +34,7 @@ class DashboardLogic extends GetxController {
 
   var networkConfig = [
     {
-      "vpn_active" : false,
+      "vpn_active" : true,
       "init_name" : "Echo VPN 1",
       "init_address" : "10.6.0.3",
       "init_port" : "51820",
@@ -66,6 +67,7 @@ class DashboardLogic extends GetxController {
   void onInit() async{
     // TODO: implement onInit
     super.onInit();
+    await autoStart();
     //await WireguardPlugin.requestPermission();
     //await WireguardPlugin.initialize();
     //await getResponse();
@@ -113,6 +115,41 @@ class DashboardLogic extends GetxController {
       SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
     }
 
+  }
+
+  void activateVpn(bool value, index) async {
+
+    networkConfig.value[index]["vpn_active"] = value;
+    print(networkConfig.value[index]["vpn_active"]);
+
+    final result = WireguardPlugin.setState(isConnected: networkConfig.value[index]["vpn_active"] as bool,
+        tunnel: Tunnel(
+          name: networkConfig.value[index]["init_name"].toString(),
+          address: networkConfig.value[index]["init_address"].toString(),
+          dnsServer: networkConfig.value[index]["init_dns_server"].toString(),
+          listenPort: networkConfig.value[index]["init_port"].toString(),
+          peerAllowedIp: networkConfig.value[index]["init_allowed_ip"].toString(),
+          peerEndpoint: networkConfig.value[index]["init_end_point"].toString(),
+          peerPublicKey: networkConfig.value[index]["init_public_key"].toString(),
+          privateKey: networkConfig.value[index]["init_private_key"].toString(),
+          preSharedKey: networkConfig.value[index]["pre_shared_key"].toString(),
+        )
+    );
+
+    print(result);
+
+//    vpnActivate = result ?? false;
+
+    update();
+    //controller.vpnActivate.value ? _obtainStats() : null;
+  }
+
+  autoStart() {
+    for(int i = 0; i<networkConfig.length; i++){
+      if(networkConfig.value[i]["vpn_active"] == true){
+        activateVpn(true, i);
+      }
+    }
   }
 
 }
