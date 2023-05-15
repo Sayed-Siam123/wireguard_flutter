@@ -17,6 +17,7 @@ abstract class SnackBarHelper{
         color: ColorConstants.WHITE,
       ),) : const SizedBox(),
       snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: isError ? 5 : 2),
       backgroundColor: isError ? ColorConstants.RED : ColorConstants.PRIMARYBLUE,
     );
   }

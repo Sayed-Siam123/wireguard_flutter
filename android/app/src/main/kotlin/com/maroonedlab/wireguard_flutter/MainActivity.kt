@@ -96,7 +96,7 @@ class MainActivity: FlutterActivity() {
 
             else if(call.method == "setState"){
                 if(!havePermission){
-                    checkPermissionFromFlutter(result)
+                    //checkPermissionFromFlutter(result)
                 }
                 else{
                     handleSetState(call.arguments, result)
@@ -172,6 +172,8 @@ class MainActivity: FlutterActivity() {
 
     private fun checkPermission() {
         val intent = GoBackend.VpnService.prepare(this)
+        Log.i("INTENT_DATA", "HERE")
+        Log.i("INTENT_DATA", intent!!.flags.toString())
         if (intent != null) {
             havePermission = false
             startActivityForResult(intent, permissionRequestCode)
@@ -183,10 +185,11 @@ class MainActivity: FlutterActivity() {
 
     private fun checkPermissionFromFlutter(result: MethodChannel.Result) {
         val intent = GoBackend.VpnService.prepare(this)
+
         if (intent != null) {
             havePermission = false
             startActivityForResult(intent, permissionRequestCode)
-            flutterError(result,"no_permission")
+            flutterSuccess(result,"no_permission")
         } else {
             havePermission = true
             flutterSuccess(result,"yes_permission")

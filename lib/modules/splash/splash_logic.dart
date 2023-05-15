@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:wireguard_flutter/helper/snackbarHelper.dart';
 
 import '../../helper/wireguard_plugins.dart';
 import '../../routes/app_pages.dart';
@@ -13,11 +14,7 @@ class SplashLogic extends GetxController {
     await Future.delayed(const Duration(seconds: 4));
     // await FunctionsConstant.setStatusBarColor(context: Get.context!);
 
-    // WireguardPlugin.requestPermission().then((value) {
-    //   if(value == "no_permission"){
-    //     WireguardPlugin.requestPermission();
-    //   }
-    // });
+    //checkPermission();
 
     // print("OKAY");
 
@@ -35,4 +32,20 @@ class SplashLogic extends GetxController {
     // TODO: implement onClose
     super.onClose();
   }
+
+
+  checkPermission(){
+    WireguardPlugin.requestPermission().then((value) {
+      if(value == true){
+        print("PERMISSION OKAY");
+        Get.offNamed(Routes.DASHBOARD);
+      }
+      else{
+        print("PERMISSION NOT OKAY");
+        SnackBarHelper.openSnackBar(isError: true,message: "Permission declined. Please accept the permission in the next run");
+        // checkPermission();
+      }
+    });
+  }
+
 }

@@ -20,10 +20,19 @@ class WireguardPlugin {
       _tunnelsStateController.stream;
 
   static Future<dynamic> requestPermission() async {
+    var havePermission = false;
     print('WireguardPlugin requestPermission ');
     final result = await _channel.invokeMethod('requestPermission');
-    print('WireguardPlugin requestPermission $result');
-    return result;
+
+    if(result == "yes_permission"){
+      havePermission = true;
+    }
+    else{
+      havePermission = false;
+    }
+
+    //print('WireguardPlugin requestPermission ${result}');
+    return havePermission;
   }
 
   static Future<bool> initialize() async {
