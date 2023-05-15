@@ -87,7 +87,7 @@ class MainActivity: FlutterActivity() {
 
             if(call.method == "getTunnelNames"){
                 if(!havePermission){
-                    checkPermissionFromFlutter(result)
+                    //checkPermissionFromFlutter(result)
                 }
                 else{
                     handleGetNames(result)
@@ -105,7 +105,7 @@ class MainActivity: FlutterActivity() {
 
             else if(call.method == "getStats"){
                 if(!havePermission){
-                    checkPermissionFromFlutter(result)
+                    //checkPermissionFromFlutter(result)
                 }
                 else{
                     handleGetStats(call.arguments, result)
