@@ -37,7 +37,7 @@ void main() async{
             defaultColor: Colors.redAccent,
             ledColor: Colors.white,
             channelShowBadge: true,
-            importance: NotificationImportance.High
+            importance: NotificationImportance.High,
         )
 
         //add more notification type with different configuration

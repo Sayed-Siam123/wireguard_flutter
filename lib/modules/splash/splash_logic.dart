@@ -18,7 +18,7 @@ class SplashLogic extends GetxController {
 
     // print("OKAY");
 
-    Get.offNamed(Routes.VIDEOADD);
+    Get.offNamed(Routes.DASHBOARD);
   }
 
   @override

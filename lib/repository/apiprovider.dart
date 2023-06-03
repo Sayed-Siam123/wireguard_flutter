@@ -58,4 +58,17 @@ class ApiProvider{
     }
   }
 
+  getAdBanner() async{
+    try {
+      var response = await api.get("/campaign/2d6fa1ba-9c79-4953-8a9f-261d124d6cff");
+      return response;
+    } on DioError {
+      EasyLoading.dismiss();
+      Get.back();
+      SnackBarHelper.openSnackBar(
+          isError: true,
+          message: "Server is not responding. \nCheck Connection & Try Again.");
+    }
+  }
+
 }

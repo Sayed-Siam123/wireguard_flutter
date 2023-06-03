@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
 import 'package:wireguard_flutter/helper/snackbarHelper.dart';
 import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
@@ -62,12 +65,15 @@ class DashboardLogic extends GetxController {
 
   var dataApi = [].obs;
 
+  Timer? countdownTimer;
 
   @override
   void onInit() async{
     // TODO: implement onInit
     super.onInit();
     await autoStart();
+    await getAdBanner();
+    await getNotification();
     //await WireguardPlugin.requestPermission();
     //await WireguardPlugin.initialize();
     //await getResponse();
@@ -152,6 +158,54 @@ class DashboardLogic extends GetxController {
         activateVpn(true, i);
       }
     }
+  }
+
+  getAdBanner() async{
+    dataApi.clear();
+    dio.Response data = await apiProvider.getAdBanner();
+
+    if (data.statusCode == 201) {
+      dataApi.addAll(data.data["data"]["ads"]);
+      var filtered1 = dataApi.where((e) => e["type"] == "image/jpeg").toList();
+      dataApi.clear();
+      dataApi.addAll(filtered1);
+    } else{
+      SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
+    }
+  }
+
+  getNotification() async{
+    log(dataApi.toString());
+
+
+
+    bool isallowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isallowed) {
+      //no permission of local notification
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }else{
+      //show notification
+
+      for(int i = 0; i<dataApi.length; i++){
+        countdownTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+          AwesomeNotifications().createNotification(
+              content: NotificationContent( //with image from URL
+                  id: 12345,
+                  channelKey: 'image',
+                  title: 'Simple Notification with Network Image',
+                  body: 'This simple notification is from Flutter App',
+                  bigPicture: dataApi[i]["key"].toString(),
+                  notificationLayout: NotificationLayout.BigPicture,
+                  payload: {"name":"flutter"},
+              )
+          );
+        });
+        if(dataApi.length == i+1){
+          countdownTimer!.cancel();
+        }
+      }
+    }
+
   }
 
 }
