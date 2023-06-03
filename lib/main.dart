@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:loggy/loggy.dart';
@@ -15,6 +15,43 @@ import 'package:wireguard_flutter/theme/theme_data.dart';
 void main() async{
   configLoading();
   WidgetsFlutterBinding.ensureInitialized();
+
+  AwesomeNotifications().initialize(
+      null,
+      [            // notification icon
+        NotificationChannel(
+          channelGroupKey: 'basic_test',
+          channelKey: 'basic',
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          channelShowBadge: true,
+          importance: NotificationImportance.High,
+          enableVibration: true,
+        ),
+
+        NotificationChannel(
+            channelGroupKey: 'image_test',
+            channelKey: 'image',
+            channelName: 'image notifications',
+            channelDescription: 'Notification channel for image tests',
+            defaultColor: Colors.redAccent,
+            ledColor: Colors.white,
+            channelShowBadge: true,
+            importance: NotificationImportance.High
+        )
+
+        //add more notification type with different configuration
+
+      ]
+  );
+
+  //tap listiner on notification
+  // AwesomeNotifications().setListeners((ReceivedNotification receivedNotification){
+  //   print(receivedNotification.payload!['name']);
+  //   //output from first notification:  FlutterCampus
+  // });
+
+
   Loggy.initLoggy(
     logPrinter: (kReleaseMode) ? const PrettyPrinter() : const PrettyPrinter(), //CrashlyticsPrinter()
   );
@@ -51,9 +88,9 @@ class MyApp extends StatelessWidget {
               getPages: AppPages.routes,
               smartManagement: SmartManagement.keepFactory,
               title: 'Echo',
-              localizationsDelegates: const [
-                FormBuilderLocalizations.delegate,
-              ],
+              // localizationsDelegates: const [
+              //   FormBuilderLocalizations.delegate,
+              // ],
             );
           }
       ),

@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard_binding.dart';
 import 'package:wireguard_flutter/modules/dashboard/dashboard_view.dart';
+import 'package:wireguard_flutter/modules/video_ad_show/video_ad_show_binding.dart';
+import 'package:wireguard_flutter/modules/video_ad_show/video_ad_show_view.dart';
 
 import '../helper/internet_checker_helper/internet_checker_helper_binding.dart';
 import '../modules/splash/splash_binding.dart';
@@ -18,6 +20,10 @@ class AppPages {
     ]),
     GetPage(name: Routes.DASHBOARD, page: () => const DashboardPage(), bindings: [
       DashboardBinding(),
+      //InternetCheckerHelperBinding(),
+    ]),
+    GetPage(name: Routes.VIDEOADD, page: () => const VideoAdShowPage(), bindings: [
+      VideoAdShowBinding(),
       //InternetCheckerHelperBinding(),
     ]),
   ];

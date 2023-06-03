@@ -109,6 +109,7 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
     /// to run wireguard on Android 25 or lower
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.7'
 }
 
 tasks.withType(JavaCompile).configureEach {

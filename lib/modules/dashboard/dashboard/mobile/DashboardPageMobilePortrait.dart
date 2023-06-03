@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:wireguard_flutter/widgets/shimmer.dart';
 import '../../../../helper/internet_checker_helper/internet_checker_helper_logic.dart';
 
 
+//ignore: must_be_immutable
 class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
   final SizingInformation? sizingInformation;
 
@@ -93,7 +95,7 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
-          onPressed: () {
+          onPressed: () async{
 
             // WireguardPlugin.requestPermission().then((value) {
             //   print(value);
@@ -113,6 +115,27 @@ class DashboardPageMobilePortrait extends GetView<DashboardLogic> {
             // );
             //
             // print(result.then((value) => print(value)));
+
+
+            bool isallowed = await AwesomeNotifications().isNotificationAllowed();
+            if (!isallowed) {
+              //no permission of local notification
+              AwesomeNotifications().requestPermissionToSendNotifications();
+            }else{
+              //show notification
+              AwesomeNotifications().createNotification(
+                  content: NotificationContent( //with image from URL
+                      id: 12345,
+                      channelKey: 'image',
+                      title: 'Simple Notification with Network Image',
+                      body: 'This simple notification is from Flutter App',
+                      bigPicture: 'https://s3.sabbir.dev/ad-asset/img2.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ewd98dQ4Z34FS2RO%2F20230602%2Fap-bd-1%2Fs3%2Faws4_request&X-Amz-Date=20230602T185243Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=5c2d139d1a182559549028e85afd4b37e8aa5ec73aa01e404ec4e10d8bc3aefc',
+                      notificationLayout: NotificationLayout.BigPicture,
+                      payload: {"name":"flutter"}
+                  )
+              );
+            }
+
 
           },
           child: const Icon(Icons.add, color: Colors.black, size: 28),
