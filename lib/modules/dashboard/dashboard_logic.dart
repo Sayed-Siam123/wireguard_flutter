@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wireguard_flutter/helper/snackbarHelper.dart';
 import 'package:wireguard_flutter/helper/wireguard_plugins.dart';
 import 'package:wireguard_flutter/repository/apiprovider.dart';
@@ -37,18 +38,46 @@ class DashboardLogic extends GetxController {
 
   var networkConfig = [
     {
-      "vpn_active" : false,
-      "init_name" : "Echo VPN 1",
-      "init_address" : "10.6.0.3",
-      "init_port" : "51820",
-      "init_dns_server" : "10.2.0.100",
-      "init_private_key" : "ePJuLMPOgvl1rnX9esPnGMX+j5ZWzZNq6kvR9myajkk=",
-      "init_allowed_ip" : "0.0.0.0/0, ::/0",
-      "init_public_key" : "OOsZp5rLjlCwdUlFkOjLzPx4jLcxTrvFpJBN8JjIyyE=",
-      "init_end_point" : "216.24.253.25:51820",
-      "pre_shared_key" : "FmGa7zgva7L+GYKpCFPbpgbMIatn+aJi6DuCI3odUMQ="
+      "vpn_active": false,
+      "init_name": "Echo VPN 1",
+      "init_address": "10.6.0.3",
+      "init_port": "51820",
+      "init_dns_server": "10.2.0.100",
+      "init_private_key": "ePJuLMPOgvl1rnX9esPnGMX+j5ZWzZNq6kvR9myajkk=",
+      "init_allowed_ip": "0.0.0.0/0, ::/0",
+      "init_public_key": "OOsZp5rLjlCwdUlFkOjLzPx4jLcxTrvFpJBN8JjIyyE=",
+      "init_end_point": "216.24.253.25:51820",
+      "pre_shared_key": "FmGa7zgva7L+GYKpCFPbpgbMIatn+aJi6DuCI3odUMQ="
     }
   ].obs;
+
+  var customMessages = [
+    {
+      "title" : "Discount on hospital bill",
+      "description" : "You will get 30% discount on your bill"
+    },
+    {
+      "title" : "Food Discount",
+      "description" : "You will get 10% discount on your foodpanda"
+    },
+    {
+      "title" : "Discount on Bkash",
+      "description" : "You will get 10% cashback on your bkash payment"
+    },
+    {
+      "title" : "Get lounge on airport",
+      "description" : "if you are connected to our network then lounge is free for you"
+    },
+    {
+      "title" : "1 GB offer at 10TK",
+      "description" : "You will get 1GB at 10TK"
+    },
+    {
+      "title" : "Discount on Shwapno Bazar bill",
+      "description" : "You will get 5% discount on your bazar today"
+    }
+  ].obs;
+
 
   // bool vpnActivate = false;
   // final String initName = 'MyWireguardVPN';
@@ -65,15 +94,18 @@ class DashboardLogic extends GetxController {
 
   var dataApi = [].obs;
 
-  Timer? countdownTimer;
+  bool isNotificationEnabled = false;
+  Timer? _timer;
 
   @override
-  void onInit() async{
+  void onInit() async {
     // TODO: implement onInit
     super.onInit();
     await autoStart();
     await getAdBanner();
-    await getNotification();
+    await askPermission();
+    //await getNotificationPermission();
+    //await getNotification();
     //await WireguardPlugin.requestPermission();
     //await WireguardPlugin.initialize();
     //await getResponse();
@@ -93,7 +125,7 @@ class DashboardLogic extends GetxController {
   }
 
 
-  getResponse() async{
+  getResponse() async {
     isLoading.value = true;
     update();
     await Future.delayed(const Duration(seconds: 4));
@@ -106,61 +138,65 @@ class DashboardLogic extends GetxController {
       update();
       dataApi.value = data.data;
       print(dataApi.value);
-    } else{
-      SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
+    } else {
+      SnackBarHelper.openSnackBar(isError: true, message: "Api is not okay");
     }
-
   }
 
-  getResponse1() async{
+  getResponse1() async {
     dio.Response data = await apiProvider.getResponse1();
     print(data.statusCode);
     if (data.statusCode == 200) {
       print(jsonDecode(data.data["data"].toString())["lines"]);
-    } else{
-      SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
+    } else {
+      SnackBarHelper.openSnackBar(isError: true, message: "Api is not okay");
     }
-
   }
 
   void activateVpn(bool value, index) async {
-
     WireguardPlugin.requestPermission().then((valuePermission) {
-      if(valuePermission == true){
+      if (valuePermission == true) {
         networkConfig.value[index]["vpn_active"] = value;
         print(networkConfig.value[index]["vpn_active"]);
 
-        final result = WireguardPlugin.setState(isConnected: networkConfig.value[index]["vpn_active"] as bool,
+        final result = WireguardPlugin.setState(
+            isConnected: networkConfig.value[index]["vpn_active"] as bool,
             tunnel: Tunnel(
               name: networkConfig.value[index]["init_name"].toString(),
               address: networkConfig.value[index]["init_address"].toString(),
-              dnsServer: networkConfig.value[index]["init_dns_server"].toString(),
+              dnsServer: networkConfig.value[index]["init_dns_server"]
+                  .toString(),
               listenPort: networkConfig.value[index]["init_port"].toString(),
-              peerAllowedIp: networkConfig.value[index]["init_allowed_ip"].toString(),
-              peerEndpoint: networkConfig.value[index]["init_end_point"].toString(),
-              peerPublicKey: networkConfig.value[index]["init_public_key"].toString(),
-              privateKey: networkConfig.value[index]["init_private_key"].toString(),
-              preSharedKey: networkConfig.value[index]["pre_shared_key"].toString(),
+              peerAllowedIp: networkConfig.value[index]["init_allowed_ip"]
+                  .toString(),
+              peerEndpoint: networkConfig.value[index]["init_end_point"]
+                  .toString(),
+              peerPublicKey: networkConfig.value[index]["init_public_key"]
+                  .toString(),
+              privateKey: networkConfig.value[index]["init_private_key"]
+                  .toString(),
+              preSharedKey: networkConfig.value[index]["pre_shared_key"]
+                  .toString(),
             )
         );
 
         update();
       }
-      else{
+      else {
         WireguardPlugin.requestPermission();
       }
     });
   }
 
   autoStart() {
-    for(int i = 0; i<networkConfig.length; i++){
-      if(networkConfig.value[i]["vpn_active"] == true){
+    for (int i = 0; i < networkConfig.length; i++) {
+      if (networkConfig.value[i]["vpn_active"] == true) {
         activateVpn(true, i);
       }
     }
   }
 
-  getAdBanner() async{
+  getAdBanner() async {
     dataApi.clear();
     dio.Response data = await apiProvider.getAdBanner();
 
@@ -169,43 +205,109 @@ class DashboardLogic extends GetxController {
       var filtered1 = dataApi.where((e) => e["type"] == "image/jpeg").toList();
       dataApi.clear();
       dataApi.addAll(filtered1);
-    } else{
-      SnackBarHelper.openSnackBar(isError: true,message: "Api is not okay");
+      dataGenerate();
+    } else {
+      SnackBarHelper.openSnackBar(isError: true, message: "Api is not okay");
     }
   }
 
-  getNotification() async{
+  getNotification() async {
     log(dataApi.toString());
-
-
-
-    bool isallowed = await AwesomeNotifications().isNotificationAllowed();
-    if (!isallowed) {
-      //no permission of local notification
-      AwesomeNotifications().requestPermissionToSendNotifications();
-    }else{
-      //show notification
-
-      for(int i = 0; i<dataApi.length; i++){
-        countdownTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-          AwesomeNotifications().createNotification(
-              content: NotificationContent( //with image from URL
-                  id: 12345,
-                  channelKey: 'image',
-                  title: 'Simple Notification with Network Image',
-                  body: 'This simple notification is from Flutter App',
-                  bigPicture: dataApi[i]["key"].toString(),
-                  notificationLayout: NotificationLayout.BigPicture,
-                  payload: {"name":"flutter"},
-              )
-          );
-        });
-        if(dataApi.length == i+1){
-          countdownTimer!.cancel();
-        }
-      }
+    for (int i = 0; i < dataApi.length; i++) {
+      await Future.delayed(const Duration(seconds: 3));
+      AwesomeNotifications().createNotification(
+          content: NotificationContent( //with image from URL
+            id: 12 + i,
+            groupKey: "1001",
+            channelKey: 'image',
+            title: dataApi[i]["title"].toString(),
+            body: dataApi[i]["description"].toString(),
+            bigPicture: dataApi[i]["key"].toString(),
+            notificationLayout: NotificationLayout.BigPicture,
+            payload: {"name": "flutter"},
+          )
+      );
     }
+  }
 
+  getNotificationPermission() async {
+    //   bool isallowed = await AwesomeNotifications().isNotificationAllowed();
+    //   if (!isallowed) {
+    //     AwesomeNotifications().requestPermissionToSendNotifications().then((value) {
+    //       if(!value){
+    //         getNotificationPermission();
+    //       }
+    //       else{
+    //         result = true;
+    //       }
+    //     });
+    //   } else{
+    //     result = true;
+    //   }
+    //
+    //   print(result);
+    //   return result;
+    //
+    // }
+
+    //   _timer = Timer.periodic(const Duration(milliseconds: 200), (_) async {
+    //     var permission = await AwesomeNotifications().isNotificationAllowed();
+    //     print(permission);
+    //     if (!permission) {
+    //       isNotificationEnabled = false;
+    //       AwesomeNotifications().requestPermissionToSendNotifications();
+    //     }
+    //     else{
+    //       isNotificationEnabled = true;
+    //       _timer!.cancel();
+    //     }
+    //   });
+    //   await Future.delayed(Duration(seconds: 1));
+    //   return isNotificationEnabled;
+    // }
+
+    var permission = await AwesomeNotifications().isNotificationAllowed();
+
+    // if(!permission){
+    //   print(permission);
+    //   await AwesomeNotifications().requestPermissionToSendNotifications();
+    //   getNotificationPermission();
+    // }
+    // else if(Permission.notification.isDenied)
+    // else{
+    //   print(permission);
+    // }
+
+    await Permission.notification.isGranted.then((value) {
+      if (!value) {
+        Permission.notification.request();
+      }
+    });
+
+    // await Permission.notification.isDenied.then((value) {
+    //   if (value) {
+    //     Permission.notification.request();
+    //   }
+    // });
+
+  }
+
+
+  askPermission() async{
+    PermissionStatus status = await Permission.notification.request();
+    if(status.isDenied == true) {
+      askPermission();
+    }else{
+      getNotification();
+    }
+  }
+
+  dataGenerate() {
+    for(int i = 0; i<dataApi.length; i++){
+      dataApi[i]["title"] = customMessages[i]["title"];
+      dataApi[i]["description"] = customMessages[i]["description"];
+    }
+    log(dataApi.toString());
   }
 
 }

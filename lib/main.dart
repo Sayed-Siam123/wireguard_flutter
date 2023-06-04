@@ -17,16 +17,17 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
   AwesomeNotifications().initialize(
-      null,
-      [            // notification icon
+      'resource://drawable/logo_noti',
+      [
         NotificationChannel(
           channelGroupKey: 'basic_test',
           channelKey: 'basic',
           channelName: 'Basic notifications',
           channelDescription: 'Notification channel for basic tests',
+          playSound: false,
+          enableVibration: false,
           channelShowBadge: true,
           importance: NotificationImportance.High,
-          enableVibration: true,
         ),
 
         NotificationChannel(
@@ -34,8 +35,11 @@ void main() async{
             channelKey: 'image',
             channelName: 'image notifications',
             channelDescription: 'Notification channel for image tests',
+            groupKey: "1001",
             defaultColor: Colors.redAccent,
             ledColor: Colors.white,
+            playSound: false,
+            enableVibration: false,
             channelShowBadge: true,
             importance: NotificationImportance.High,
         )
