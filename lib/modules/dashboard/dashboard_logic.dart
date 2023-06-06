@@ -102,8 +102,8 @@ class DashboardLogic extends GetxController {
     // TODO: implement onInit
     super.onInit();
     await autoStart();
-    await getAdBanner();
     await askPermission();
+    await getAdBanner();
     //await getNotificationPermission();
     //await getNotification();
     //await WireguardPlugin.requestPermission();
@@ -154,7 +154,7 @@ class DashboardLogic extends GetxController {
   }
 
   void activateVpn(bool value, index) async {
-    WireguardPlugin.requestPermission().then((valuePermission) {
+    WireguardPlugin.requestPermission().then((valuePermission) async{
       if (valuePermission == true) {
         networkConfig.value[index]["vpn_active"] = value;
         print(networkConfig.value[index]["vpn_active"]);
@@ -181,6 +181,16 @@ class DashboardLogic extends GetxController {
         );
 
         update();
+        if(value == true){
+          if(dataApi.isEmpty){
+            getAdBanner();
+            await Future.delayed(const Duration(seconds: 2));
+            getNotification();
+          }else{
+            await Future.delayed(const Duration(seconds: 2));
+            getNotification();
+          }
+        }
       }
       else {
         WireguardPlugin.requestPermission();
@@ -199,7 +209,6 @@ class DashboardLogic extends GetxController {
   getAdBanner() async {
     dataApi.clear();
     dio.Response data = await apiProvider.getAdBanner();
-
     if (data.statusCode == 201) {
       dataApi.addAll(data.data["data"]["ads"]);
       var filtered1 = dataApi.where((e) => e["type"] == "image/jpeg").toList();
@@ -214,10 +223,10 @@ class DashboardLogic extends GetxController {
   getNotification() async {
     log(dataApi.toString());
     for (int i = 0; i < dataApi.length; i++) {
-      await Future.delayed(const Duration(seconds: 3));
+      i == 0 ? null : await Future.delayed(const Duration(seconds: 3));
       AwesomeNotifications().createNotification(
           content: NotificationContent( //with image from URL
-            id: 12 + i,
+            id: 12 + i+1,
             groupKey: "1001",
             channelKey: 'image',
             title: dataApi[i]["title"].toString(),
@@ -297,9 +306,10 @@ class DashboardLogic extends GetxController {
     PermissionStatus status = await Permission.notification.request();
     if(status.isDenied == true) {
       askPermission();
-    }else{
-      getNotification();
     }
+    // else{
+    //   getNotification();
+    // }
   }
 
   dataGenerate() {
@@ -307,7 +317,7 @@ class DashboardLogic extends GetxController {
       dataApi[i]["title"] = customMessages[i]["title"];
       dataApi[i]["description"] = customMessages[i]["description"];
     }
-    log(dataApi.toString());
+    log("HERE data is: $dataApi");
   }
 
 }
