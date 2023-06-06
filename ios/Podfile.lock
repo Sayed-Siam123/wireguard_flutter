@@ -1,0 +1,78 @@
+PODS:
+  - Alamofire (5.7.1)
+  - awesome_notifications (0.7.5-dev.2):
+    - Flutter
+    - IosAwnCore (= 0.7.5-dev.2)
+  - Flutter (1.0.0)
+  - IosAwnCore (0.7.5-dev.2)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.0.4):
+    - Flutter
+  - PIAWireguard (1.0.1):
+    - PIAWireguard/AppExtension (= 1.0.1)
+    - PIAWireguard/Core (= 1.0.1)
+  - PIAWireguard/AppExtension (1.0.1):
+    - PIAWireguard/Core
+  - PIAWireguard/Core (1.0.1):
+    - Alamofire
+    - TweetNacl
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - TweetNacl (1.0.2)
+  - video_player_avfoundation (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
+  - Flutter (from `Flutter`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - PIAWireguard (from `https://github.com/pia-foss/ios-wireguard`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - IosAwnCore
+    - TweetNacl
+
+EXTERNAL SOURCES:
+  awesome_notifications:
+    :path: ".symlinks/plugins/awesome_notifications/ios"
+  Flutter:
+    :path: Flutter
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  PIAWireguard:
+    :git: https://github.com/pia-foss/ios-wireguard
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  video_player_avfoundation:
+    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+
+CHECKOUT OPTIONS:
+  PIAWireguard:
+    :commit: 10ddb6b3e79b695358d4fa58a85d663039f7509e
+    :git: https://github.com/pia-foss/ios-wireguard
+
+SPEC CHECKSUMS:
+  Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
+  awesome_notifications: b1298b690fcfc25bb885af65056e92cec04ad9c9
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  IosAwnCore: f91ab77c879277e40e57924c3c9699fafcfc3c02
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  PIAWireguard: 9d71dabc9e483b149236eebbd0e6bb8fa5c8317f
+  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
+  TweetNacl: 3abf4d1d2082b0114e7a67410e300892448951e6
+  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+
+PODFILE CHECKSUM: c17516dfa55238dcfcf84fede707d647863d160b
+
+COCOAPODS: 1.12.1
